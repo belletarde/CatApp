@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Cat App</string>
+    <string name="cat_list_item_love_description">A like cat button</string>
+    <string name="cat_list_item_image_description">A nice cat image</string>
+    <string name="api_key_name">x-api-key</string>
+    <string name="api_cat_user_id">wdh4wj</string>
+    <string name="api_like_value">1</string>
+    <string name="api_base_url">https://api.thecatapi.com/</string>
+    <string name="api_key_value">04bfce0a-a91a-49f4-94b7-e0c67b0ff49a</string>
+    <string name="cat_loader_txt">Loading more cats for you...</string>
+</resources>
