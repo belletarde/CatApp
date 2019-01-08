@@ -12,7 +12,6 @@ import com.app.cat.kevin.thecatapp.model.Breed;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.neo.arcchartview.ArcChartView;
 
 
 import butterknife.BindView;
