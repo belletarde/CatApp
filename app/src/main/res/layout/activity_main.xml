@@ -9,6 +9,14 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <!--<include-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/infinity_scroll_progress"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="3" />-->
+
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/cat_list"
@@ -25,12 +33,4 @@
         android:indeterminateDrawable="@drawable/progress"
         android:layout_height="80dp" />
 
-    <include
-        android:layout_marginLeft="16dp"
-        android:visibility="gone"
-        android:id="@+id/infinity_scroll_progress"
-        layout="@layout/infinity_scroll_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="3" />
 </LinearLayout>

@@ -46,31 +46,18 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-iid:17.0.4'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
-    implementation "com.google.firebase:firebase-config:16.1.2"
-
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.0'
 
     implementation "android.arch.paging:runtime:1.0.1"
 
-    //GridView
-    implementation 'com.felipecsl.asymmetricgridview:library:2.0.1'
-
-    //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit2"
 
-    //Gson
     implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: "$retrofit2"
 
-    //RxJava
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
     implementation "io.reactivex.rxjava2:rxjava:$rxjava"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$adapter"
 
-    //Glide
     implementation ("com.github.bumptech.glide:glide:4.8.0") {
         exclude group: "com.android.support"
     }

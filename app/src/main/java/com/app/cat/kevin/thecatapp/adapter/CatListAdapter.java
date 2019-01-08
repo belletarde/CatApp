@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.app.cat.kevin.thecatapp.R;
+import com.app.cat.kevin.thecatapp.model.Breed;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -52,6 +54,11 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
     public void onBindViewHolder(final CatListAdapter.ViewHolder holder, int position) {
 
         Cat cat = catList.get(position);
+        if(!cat.getBreed().isEmpty()) {
+            Breed breed = cat.getBreed().get(0);
+            holder.breedName.setText(breed.getName() + " - " + breed.getOrigin());
+        }
+
         Glide
             .with(context)
             .load(cat.getUrl())
@@ -95,6 +102,9 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
 
         @BindView(R.id.cat_share_ic)
         ImageView shareImageBtn;
+
+        @BindView(R.id.breed_name)
+        TextView breedName;
 
         ViewHolder(View itemView) {
             super(itemView);

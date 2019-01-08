@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     @BindView(R.id.list_first_loading)
     ProgressBar listProgress;
 
-    @BindView(R.id.infinity_scroll_progress)
-    View infinityScrollProgress;
-
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
     private boolean loading = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount, page = 10;

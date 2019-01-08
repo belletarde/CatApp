@@ -1,6 +1,7 @@
 package com.app.cat.kevin.thecatapp.api.service;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import com.app.cat.kevin.thecatapp.api.RetrofitInitializer;
