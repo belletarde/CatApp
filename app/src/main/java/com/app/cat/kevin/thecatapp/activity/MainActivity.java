@@ -22,6 +22,7 @@ import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,9 +43,10 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     @BindView(R.id.view_connection_error)
     ConnectionErrorView connectionErrorView;
 
+    private static final int INITIAL_PAGE = 12;
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
     private boolean loading = false;
-    private int pastVisibleItems, visibleItemCount, totalItemCount, page = 10;
+    private int pastVisibleItems, visibleItemCount, totalItemCount, page = INITIAL_PAGE;
     private List<Cat> catList = new ArrayList<>();
     private CatListAdapter adapter;
     private int positionLiked;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 this, OrientationHelper.VERTICAL, false);
 
-        if(page > 10) {
+        if(page > INITIAL_PAGE) {
             adapter.notifyDataSetChanged();
         } else {
             initCatRecycler(layoutManager);
