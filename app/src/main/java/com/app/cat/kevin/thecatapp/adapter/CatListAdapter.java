@@ -28,15 +28,13 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
     private List<Cat> catList;
     private OnListClick onCatListClickListener;
     private OnLikeClick onLikeClickListener;
-    private OnShareClick onShareClickListener;
 
     public CatListAdapter(Context context, List<Cat> catList, OnListClick onCatListClickListener,
-                          OnLikeClick onLikeClickListener, OnShareClick onShareClickListener) {
+                          OnLikeClick onLikeClickListener) {
         this.context = context;
         this.catList = catList;
         this.onLikeClickListener = onLikeClickListener;
         this.onCatListClickListener = onCatListClickListener;
-        this.onShareClickListener = onShareClickListener;
     }
 
     @Override
@@ -76,15 +74,10 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
 
         holder.likeImageBtn.setOnClickListener(v -> onLikeClickListener.onLikeClickListener(cat.getId(), position));
 
-        holder.shareImageBtn.setOnClickListener(v -> onShareClickListener.onShareClickListener(cat));
     }
 
     public interface OnListClick {
         void onCatListClickListener(String id);
-    }
-
-    public interface OnShareClick {
-        void onShareClickListener(Cat cat);
     }
 
     public interface OnLikeClick {
@@ -99,9 +92,6 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
         @Nullable
         @BindView(R.id.cat_like_ic)
         ImageView likeImageBtn;
-
-        @BindView(R.id.cat_share_ic)
-        ImageView shareImageBtn;
 
         @BindView(R.id.breed_name)
         TextView breedName;

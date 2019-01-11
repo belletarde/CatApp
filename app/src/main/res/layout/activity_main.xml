@@ -9,13 +9,11 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <!--<include-->
-        <!--android:layout_marginLeft="16dp"-->
-        <!--android:visibility="gone"-->
-        <!--android:id="@+id/infinity_scroll_progress"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="3" />-->
+    <com.app.cat.kevin.thecatapp.view.ConnectionErrorView
+    android:id="@+id/view_connection_error"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
@@ -26,6 +24,7 @@
         tools:listitem="@layout/cat_list_item" />
 
     <ProgressBar
+        tools:visibility="visible"
         android:id="@+id/list_first_loading"
         android:layout_weight="3"
         android:layout_gravity="center_horizontal"

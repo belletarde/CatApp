@@ -35,14 +35,6 @@
 
             <ImageView
                 android:contentDescription="@string/cat_list_item_love_description"
-                android:id="@+id/cat_share_ic"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_action_share" />
-
-            <ImageView
-                android:contentDescription="@string/cat_list_item_love_description"
                 android:id="@+id/cat_like_ic"
                 android:layout_gravity="end"
                 android:layout_marginLeft="8dp"

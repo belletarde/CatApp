@@ -1,7 +1,5 @@
 package com.app.cat.kevin.thecatapp.api.service;
 
-
-import android.content.Context;
 import android.util.Log;
 
 import com.app.cat.kevin.thecatapp.api.RetrofitInitializer;
@@ -14,10 +12,10 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-
 public class CatApiService {
 
     private RetrofitInitializer retrofitInitializer;
+    private static final String RETROFIT_ERROR = "ERROR";
 
     public CatApiService() {
         retrofitInitializer = new RetrofitInitializer();
@@ -29,7 +27,7 @@ public class CatApiService {
                 .catApi()
                 .getCat(id)
                 .compose(RxFunctions.applySingleSchedulers())
-                .doOnError( throwable -> Log.e("ERROR", ""));
+                .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api getCatById error " + throwable));
     }
 
     public Single<List<Cat>> getCatList(int page) {
@@ -37,7 +35,7 @@ public class CatApiService {
                 .catApi()
                 .getCatList(page, 10, "desc", "full")
                 .compose(RxFunctions.applySingleSchedulers())
-                .doOnError(throwable -> Log.e("ERROR", ""));
+                .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api getCatList error " + throwable));
     }
 
     public Single<FavouriteResponse> likeCat(FavouriteRequest favouriteRequest){
@@ -45,6 +43,6 @@ public class CatApiService {
                 .catApi()
                 .likeCat(favouriteRequest)
                 .compose(RxFunctions.applySingleSchedulers())
-                .doOnError( throwable -> Log.e("ERROR", ""));
+                .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api likeCat error " + throwable));
     }
 }

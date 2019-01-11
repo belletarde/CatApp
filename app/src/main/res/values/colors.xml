@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#4a0073</color>
     <color name="colorAccent">#ffff</color>
     <color name="ratingUnselectedColor">#e1bee7</color>
+    <color name="light_primary_background">#e1bee7</color>
 </resources>

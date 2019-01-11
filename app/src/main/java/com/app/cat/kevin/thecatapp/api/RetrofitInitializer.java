@@ -22,11 +22,16 @@ public class RetrofitInitializer {
 
     private Retrofit retrofit;
 
+    private static final String BASE_URL = "https://api.thecatapi.com/";
+    private static final String TOKEN_KEY = "x-api-key";
+    private static final String TOKEN_VALUE = "04bfce0a-a91a-49f4-94b7-e0c67b0ff49a";
+    private static final long TIME_OUT = 60L;
+
     public RetrofitInitializer() {
         OkHttpClient client = this.createHttpClient();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.thecatapi.com/")
+                .baseUrl(BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -44,14 +49,14 @@ public class RetrofitInitializer {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         return (new OkHttpClient.Builder())
-                .connectTimeout(60L, TimeUnit.SECONDS)
-                .readTimeout(60L, TimeUnit.SECONDS)
-                .writeTimeout(60L, TimeUnit.SECONDS)
+                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+                .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .addInterceptor(chain -> {
                     Request request = chain.request();
                     request = request.newBuilder()
-                            .addHeader( "x-api-key","04bfce0a-a91a-49f4-94b7-e0c67b0ff49a")
+                            .addHeader( TOKEN_KEY,TOKEN_VALUE)
                             .build();
                     return chain.proceed(request);
                 })

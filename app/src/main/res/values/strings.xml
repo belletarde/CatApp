@@ -4,6 +4,20 @@
     <string name="cat_list_item_image_description">A nice cat image</string>
     <string name="api_cat_user_id">wdh4wj</string>
     <string name="api_like_value">1</string>
-    <string name="api_base_url">https://api.thecatapi.com/</string>
     <string name="cat_loader_txt">Loading more cats for you...</string>
+    <string name="breed_detail_value">%1$d</string>
+    <string name="connection_failed_ops">Oh!</string>
+    <string name="connection_failed_error">An error occurred.</string>
+    <string name="connection_failed_description">Check your internet, cellphone mode, and </string>
+    <string name="connection_failed_try_again"><u>Try again</u></string>
+    <string name="cat_detail_adaptability">Adaptability:</string>
+    <string name="cat_detail_affection">Affection:</string>
+    <string name="cat_detail_dog_friendly">Dog friendly:</string>
+    <string name="cat_detail_child_friendly">Child friendly:</string>
+    <string name="on_like_click_message">Just 1 sec for check this...</string>
+    <string name="on_infinity_loading_error">Error to get more cats.</string>
+    <string name="snack_btn_title">Ok</string>
+    <string name="success_favourite">Wow! This cat love you too.</string>
+    <string name="error_already_favourite">Oh! This cat already love you.</string>
+    <string name="error_on_favorite">"Oh no, an error occurred."</string>
 </resources>

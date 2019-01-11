@@ -1,7 +1,6 @@
 package com.app.cat.kevin.thecatapp.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
+import com.app.cat.kevin.thecatapp.view.ConnectionErrorView;
 import com.app.cat.kevin.thecatapp.R;
 import com.app.cat.kevin.thecatapp.adapter.CatListAdapter;
 import com.app.cat.kevin.thecatapp.api.service.CatApiService;
@@ -30,13 +31,16 @@ import static com.app.cat.kevin.thecatapp.activity.ListDetailActivity.USER_ID;
 
 
 public class MainActivity extends AppCompatActivity implements CatListAdapter.OnListClick,
-        CatListAdapter.OnLikeClick, CatListAdapter.OnShareClick {
+        CatListAdapter.OnLikeClick, ConnectionErrorView.OnTryAgainButtonListener {
 
     @BindView(R.id.cat_list)
     RecyclerView catRecyclerView;
 
     @BindView(R.id.list_first_loading)
     ProgressBar listProgress;
+
+    @BindView(R.id.view_connection_error)
+    ConnectionErrorView connectionErrorView;
 
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
     private boolean loading = false;
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 this, OrientationHelper.VERTICAL, false);
 
-        if(page > 10){
+        if(page > 10) {
             adapter.notifyDataSetChanged();
         } else {
             initCatRecycler(layoutManager);
@@ -79,26 +83,26 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     }
 
     private void initCatRecycler(LinearLayoutManager layoutManager) {
-        listProgress.setVisibility(View.GONE);
-        catRecyclerView.setVisibility(View.VISIBLE);
+        Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        initRecyclerProgress();
+        catRecyclerView.startAnimation(slideUp);
         adapter = new CatListAdapter(
                 this,
                 catList,
                 this::onCatListClickListener,
-                this::onLikeClickListener,
-                this::onShareClickListener);
+                this::onLikeClickListener);
         catRecyclerView.setLayoutManager(layoutManager);
         catRecyclerView.setAdapter(adapter);
     }
 
-    public void like(FavouriteRequest favouriteRequest){
+    public void like(FavouriteRequest favouriteRequest) {
         CatApiService catApiService = new CatApiService();
         catCompositeDisposable.add(catApiService.likeCat(favouriteRequest).subscribe(
                 this::favouriteResponseSuccess,
                 this::favouriteResponsError));
     }
 
-    private void recyclerScrollListener(LinearLayoutManager layoutManager){
+    private void recyclerScrollListener(LinearLayoutManager layoutManager) {
         catRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
                     visibleItemCount = layoutManager.getChildCount();
                     totalItemCount = layoutManager.getItemCount();
                     pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-
                     if (!loading)
                     {
                         if ( (visibleItemCount + pastVisibleItems) >= totalItemCount)
@@ -125,12 +128,26 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         });
     }
 
+    private void initRecyclerProgress() {
+        listProgress.setVisibility(View.GONE);
+        connectionErrorView.setVisibility(View.GONE);
+        catRecyclerView.setVisibility(View.VISIBLE);
+    }
+
     private void favouriteResponsError(Throwable throwable) {
-        startSnack("Oh no, an error occurred.");
+        if (throwable.getMessage().contains("400")) {
+            successFavorite(getString(R.string.error_already_favourite));
+            return;
+        }
+        startSnack(getString(R.string.error_on_favorite));
     }
 
     private void favouriteResponseSuccess(FavouriteResponse favouriteResponse) {
-        startSnack("Wow! This cat love you too.");
+        successFavorite(getString(R.string.success_favourite));
+    }
+
+    private void successFavorite(String snackText) {
+        startSnack(snackText);
         catList.get(positionLiked).setLike(true);
         adapter.notifyDataSetChanged();
     }
@@ -138,21 +155,22 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     private void startSnack(String infoData) {
         View parentLayout = findViewById(android.R.id.content);
         Snackbar.make(parentLayout, infoData, Snackbar.LENGTH_SHORT)
-                .setAction("ok", view -> {
+                .setAction(getString(R.string.snack_btn_title), view -> {
                 })
                 .setActionTextColor(getResources().getColor(android.R.color.holo_purple ))
                 .show();
     }
 
     public void catListErrorResponse(Throwable throwable) {
-        Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-    }
+        listProgress.setVisibility(View.GONE);
+        loading = false;
+        if(catList.size() <= 0) {
+            connectionErrorView.setVisibility(View.VISIBLE);
+            connectionErrorView.setOnTryAgainButtonListener(this);
+            return;
+        }
 
-    @Override
-    public void onShareClickListener(Cat cat) {
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(cat.getUrl()));
-        startActivity(Intent.createChooser(share, "Share Image"));
+        startSnack(getString(R.string.on_infinity_loading_error));
     }
 
     @Override
@@ -180,10 +198,17 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
 
     @Override
     public void onLikeClickListener(String id, int position) {
-        startSnack("Just 1 sec for check this...");
+        startSnack(getString(R.string.on_like_click_message));
         positionLiked = position;
         FavouriteRequest favouriteRequest = new FavouriteRequest(id, getResources().getString(R.string.api_cat_user_id));
         like(favouriteRequest);
+    }
+
+    @Override
+    public void onTryAgainButtonClick() {
+        fetchCatList();
+        listProgress.setVisibility(View.VISIBLE);
+        connectionErrorView.setVisibility(View.GONE);
     }
 }
 

@@ -1,52 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".activity.ListDetailActivity">
 
-    <ScrollView
+    <com.app.cat.kevin.thecatapp.view.ConnectionErrorView
+        android:id="@+id/view_connection"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        tools:visibility="gone"
+        android:id="@+id/cat_detail_progress"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="80dp"
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_height="80dp" />
+
+    <ScrollView
+        tools:visibility="visible"
+        android:id="@+id/cat_detail_content"
+        android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="8dp">
 
             <ImageView
                 android:id="@+id/cat_detail_img"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:background="@color/colorPrimary"
-                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/app_name" />
-
-            <TextView
-                android:id="@+id/cat_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                tools:text="Título"/>
 
             <TextView
                 android:id="@+id/cat_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:textSize="16sp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 tools:text="description"/>
 
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/cat_detail_adaptability"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/adaptability"
+                    android:layout_width="50dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorPrimary"
+                    />
+
+                <TextView
+                    android:id="@+id/adaptability_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:text="5"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/cat_detail_affection"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/affection"
+                    android:layout_width="50dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorPrimary"
+                    />
+
+                <TextView
+                    android:id="@+id/affection_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:text="5"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/cat_detail_child_friendly"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/child_friendly"
+                    android:layout_width="50dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorPrimary"
+                    />
+
+                <TextView
+                    android:id="@+id/child_friendly_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:text="5"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/cat_detail_dog_friendly"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/dog_friendly"
+                    android:layout_width="50dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorPrimary"
+                    />
+
+                <TextView
+                    android:id="@+id/dog_friendly_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:text="5"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
