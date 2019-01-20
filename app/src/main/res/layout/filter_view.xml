@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <RadioGroup
+        android:id="@+id/radio_filter_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/filter_view_radio_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Black" />
+
+        <RadioButton
+            android:id="@+id/filter_view_radio_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="White" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/filter_view_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter"/>
+</LinearLayout>

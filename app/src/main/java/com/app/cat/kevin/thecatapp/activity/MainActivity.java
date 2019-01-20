@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.app.cat.kevin.thecatapp.view.ConnectionErrorView;
 import com.app.cat.kevin.thecatapp.R;
@@ -19,6 +22,7 @@ import com.app.cat.kevin.thecatapp.api.service.CatApiService;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.app.cat.kevin.thecatapp.model.FavouriteRequest;
 import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
+import com.app.cat.kevin.thecatapp.view.FilterView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,8 @@ import static com.app.cat.kevin.thecatapp.activity.ListDetailActivity.USER_ID;
 
 
 public class MainActivity extends AppCompatActivity implements CatListAdapter.OnListClick,
-        CatListAdapter.OnLikeClick, ConnectionErrorView.OnTryAgainButtonListener {
+        CatListAdapter.OnLikeClick, ConnectionErrorView.OnTryAgainButtonListener, FilterView.OnFilterButtonListener
+        {
 
     @BindView(R.id.cat_list)
     RecyclerView catRecyclerView;
@@ -43,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     @BindView(R.id.view_connection_error)
     ConnectionErrorView connectionErrorView;
 
+    @BindView(R.id.filter_view)
+    FilterView filterView;
+
     private static final int INITIAL_PAGE = 12;
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
     private boolean loading = false;
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     private List<Cat> catList = new ArrayList<>();
     private CatListAdapter adapter;
     private int positionLiked;
+    private Menu mainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         fetchCatList();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void fetchCatList() {
@@ -66,7 +76,33 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
                 this::catListErrorResponse));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.filter_layout, menu);
+        mainMenu = menu;
+        return true;
+    }
+
+
+    private void setFilterVisible() {
+        mainMenu.setGroupVisible(R.id.filter_group, true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_filter) {
+            filterView.setVisibility(View.VISIBLE);
+            filterView.setOnFilterButtonListener(this);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void catListSuccessResponse(List<Cat> catListResponse) {
+        setFilterVisible();
         loading = false;
         setCatList(catListResponse);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
@@ -211,6 +247,12 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         fetchCatList();
         listProgress.setVisibility(View.VISIBLE);
         connectionErrorView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFilterButtonClick(String radioValue) {
+        filterView.setVisibility(View.GONE);
+        Toast.makeText(this, radioValue, Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -32,9 +32,8 @@ ext {
     rxandroid = '2.0.2'
     rxjava = '2.2.3'
     adapter = '2.4.0'
-    firebaseConfigVersion = '16.0.0'
-    firebaseCoreVersion = '16.0.1'
-    firebaseMessagingVersion = '17.1.0'
+    okhttpLogVersion = '3.4.0'
+    glideVersion = '4.8.0'
 }
 
 dependencies {
@@ -46,9 +45,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.0'
-
-    implementation "android.arch.paging:runtime:1.0.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLogVersion"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit2"
 
@@ -58,7 +55,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$adapter"
 
-    implementation ("com.github.bumptech.glide:glide:4.8.0") {
+    implementation ("com.github.bumptech.glide:glide:$glideVersion") {
         exclude group: "com.android.support"
     }
     implementation "com.android.support:support-fragment:$androidSuppot"
