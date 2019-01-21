@@ -3,6 +3,8 @@ package com.app.cat.kevin.thecatapp.api;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.app.cat.kevin.thecatapp.model.FavouriteRequest;
 import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.ImageColorRecognizeRequest;
+import com.app.cat.kevin.thecatapp.model.googleColorApiResponse.ImageColorRecognizeResponse;
 
 import java.util.List;
 
@@ -28,5 +30,8 @@ public interface CatApi {
 
     @GET
     Single<ResponseBody> downloadCatImage(@Url String fileUrl);
+
+    @POST
+    Single<ImageColorRecognizeResponse> getImageColors(@Url String fileUrl, @Body ImageColorRecognizeRequest imageColorRecognizeRequest);
 
 }

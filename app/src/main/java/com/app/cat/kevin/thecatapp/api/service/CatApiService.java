@@ -6,6 +6,8 @@ import com.app.cat.kevin.thecatapp.api.RetrofitInitializer;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.app.cat.kevin.thecatapp.model.FavouriteRequest;
 import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.ImageColorRecognizeRequest;
+import com.app.cat.kevin.thecatapp.model.googleColorApiResponse.ImageColorRecognizeResponse;
 import com.app.cat.kevin.thecatapp.utils.RxFunctions;
 
 import java.util.List;
@@ -51,6 +53,14 @@ public class CatApiService {
         return retrofitInitializer
                 .catApi()
                 .downloadCatImage(url)
+                .compose(RxFunctions.applySingleSchedulers())
+                .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api cat image error " + throwable));
+    }
+
+    public  Single<ImageColorRecognizeResponse> getImageColors(ImageColorRecognizeRequest imageColorRecognizeRequest) {
+        return retrofitInitializer
+                .catApi()
+                .getImageColors("https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAuztboj9qXf9hEiMU2DTKWF6zc7CuVSZU", imageColorRecognizeRequest)
                 .compose(RxFunctions.applySingleSchedulers())
                 .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api cat image error " + throwable));
     }

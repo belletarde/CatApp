@@ -1,18 +1,16 @@
 package com.app.cat.kevin.thecatapp.activity;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,13 +19,20 @@ import com.app.cat.kevin.thecatapp.R;
 import com.app.cat.kevin.thecatapp.api.service.CatApiService;
 import com.app.cat.kevin.thecatapp.model.Breed;
 import com.app.cat.kevin.thecatapp.model.Cat;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.ImageColorRecognizeRequest;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.Request;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.RequestFeatures;
+import com.app.cat.kevin.thecatapp.model.googleColorApiRequest.RequestImage;
+import com.app.cat.kevin.thecatapp.model.googleColorApiResponse.ColorRGB;
+import com.app.cat.kevin.thecatapp.model.googleColorApiResponse.ImageColorRecognizeResponse;
 import com.app.cat.kevin.thecatapp.view.ConnectionErrorView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +54,9 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
 
     @NonNull
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
+
+    @BindView(R.id.cat_color)
+    public View catColor;
 
     @BindView(R.id.cat_description)
     public TextView catDescription;
@@ -145,12 +153,51 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
 //        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 
         String base64 = Base64.encodeToString(body.bytes(), Base64.DEFAULT);
-        Toast.makeText(this, "ID:"+id+"BASE64  "+base64, Toast.LENGTH_SHORT).show();
-        Log.e("###test64", base64);
+        if (base64 != null) {
+            makeRequestObject(base64);
+        }
 
-//        byte[] buffer = body.bytes();
-//        byteBuffer.write(buffer, 0, (int) body.contentLength());
-//        bmp = BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
+
+        catCompositeDisposable.add(catApiService.getImageColors(makeRequestObject(base64)).subscribe(
+                this::colorRecognizeSuccess,
+                this::colorRecognizeError
+        ));
+    }
+
+    private void colorRecognizeSuccess(ImageColorRecognizeResponse body) {
+        ColorRGB color = body.getResponses().get(0).getDominationColors().getColors().getColors().get(0).getColor();
+        ColorRGB color2 = body.getResponses().get(0).getDominationColors().getColors().getColors().get(1).getColor();
+        int x = Color.rgb(color.getRed(), color.getGreen(), color.getBlue());
+        int y = Color.rgb(color2.getRed(), color2.getGreen(), color2.getBlue());
+
+        int[] colors = {x, y};
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM, colors);
+
+        gd.setCornerRadius(0f);
+        catColor.setBackground(gd);
+
+        Animation slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_right);
+        catDetailLayout.startAnimation(slideRight);
+        successProgress();
+
+    }
+
+    private void colorRecognizeError(Throwable throwable) {
+        Toast.makeText(this, "yyy", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    private ImageColorRecognizeRequest makeRequestObject(String base64) {
+        RequestImage requestImage = new RequestImage(base64);
+        RequestFeatures requestFeatures = new RequestFeatures("IMAGE_PROPERTIES");
+        List<RequestFeatures> requestFeaturesList = new ArrayList<>();
+        requestFeaturesList.add(requestFeatures);
+        Request request = new Request(requestImage, requestFeaturesList);
+        List<Request> requestList = new ArrayList<>();
+        requestList.add(request);
+        return new ImageColorRecognizeRequest(requestList);
     }
 
     private void catImageDownloadError(Throwable throwable) {
@@ -158,9 +205,6 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     }
 
     public void detailSuccessResponse(Cat response) {
-        Animation slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_right);
-        catDetailLayout.startAnimation(slideRight);
-        successProgress();
         getCatColor(response);
         String title = getString(R.string.app_name);
         if(response.getBreed().size() > 0) {
