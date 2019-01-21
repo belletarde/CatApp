@@ -6,9 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Cat {
-    private String id, url;
+    private String id, url, color;
     @SerializedName("breeds")
     private List<Breed> breed;
+    long tag;
+
 
     private boolean like;
 
@@ -42,5 +44,21 @@ public class Cat {
 
     public void setBreed(List<Breed> breed) {
         this.breed = breed;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setTag(long tag) {
+        this.tag = tag;
+    }
+
+    public long getTag() {
+        return tag;
     }
 }

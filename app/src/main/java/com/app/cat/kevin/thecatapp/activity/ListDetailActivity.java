@@ -2,6 +2,10 @@ package com.app.cat.kevin.thecatapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,10 +26,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import okhttp3.ResponseBody;
 
 public class ListDetailActivity extends AppCompatActivity implements ConnectionErrorView.OnTryAgainButtonListener{
 
@@ -36,7 +44,8 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     public final static int LVL_4_SIZE = 200;
     public final static int LVL_5_SIZE = 250;
     public final static String USER_ID = "id";
-    private  String id;
+    private String id;
+    private CatApiService catApiService = new CatApiService();
 
     @NonNull
     private CompositeDisposable catCompositeDisposable = new CompositeDisposable();
@@ -119,17 +128,40 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
 
     public void getCatDetail() {
         catDetailProgress.setVisibility(View.VISIBLE);
-        CatApiService catApiService = new CatApiService();
         catCompositeDisposable.add(catApiService.getCatById(id).subscribe(
                 this::detailSuccessResponse,
                 this::detailErrorResponse));
 
     }
 
+    private void getCatColor(Cat cat) {
+        catCompositeDisposable.add(catApiService.downloadCatImage(cat.getUrl()).subscribe(
+                this::catImageDownloadSuccess,
+                this::catImageDownloadError
+        ));
+    }
+
+    private void catImageDownloadSuccess(ResponseBody body) throws IOException {
+//        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
+        String base64 = Base64.encodeToString(body.bytes(), Base64.DEFAULT);
+        Toast.makeText(this, "ID:"+id+"BASE64  "+base64, Toast.LENGTH_SHORT).show();
+        Log.e("###test64", base64);
+
+//        byte[] buffer = body.bytes();
+//        byteBuffer.write(buffer, 0, (int) body.contentLength());
+//        bmp = BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
+    }
+
+    private void catImageDownloadError(Throwable throwable) {
+        Toast.makeText(this, ""+throwable, Toast.LENGTH_SHORT).show();
+    }
+
     public void detailSuccessResponse(Cat response) {
         Animation slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_right);
         catDetailLayout.startAnimation(slideRight);
         successProgress();
+        getCatColor(response);
         String title = getString(R.string.app_name);
         if(response.getBreed().size() > 0) {
             title = breedInfo(response.getBreed().get(0));

@@ -2,6 +2,7 @@ package com.app.cat.kevin.thecatapp.adapter;
 
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,10 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
         this.onCatListClickListener = onCatListClickListener;
     }
 
+    public void setListColorFilter(List<Cat> catList) {
+        this.catList = catList;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cat_list_item, parent, false);
@@ -56,6 +61,8 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
             Breed breed = cat.getBreed().get(0);
             holder.breedName.setText(breed.getName() + " - " + breed.getOrigin());
         }
+
+        holder.catTag.setBackgroundColor((int) cat.getTag());
 
         Glide
             .with(context)
@@ -96,6 +103,9 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
         @BindView(R.id.breed_name)
         TextView breedName;
 
+        @BindView(R.id.cat_tag)
+        View catTag;
+
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -109,4 +119,5 @@ public class CatListAdapter extends RecyclerView.Adapter<CatListAdapter.ViewHold
             .load(imgDrawable)
             .into(imageLike);
     }
+
 }

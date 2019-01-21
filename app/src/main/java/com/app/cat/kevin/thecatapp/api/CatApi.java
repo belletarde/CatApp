@@ -7,11 +7,13 @@ import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
 import java.util.List;
 
 import io.reactivex.Single;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface CatApi {
 
@@ -23,5 +25,8 @@ public interface CatApi {
 
     @POST("v1/favourites/")
     Single<FavouriteResponse> likeCat(@Body FavouriteRequest favouriteRequest);
+
+    @GET
+    Single<ResponseBody> downloadCatImage(@Url String fileUrl);
 
 }

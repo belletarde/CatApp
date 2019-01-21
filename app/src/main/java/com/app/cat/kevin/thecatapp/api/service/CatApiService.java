@@ -11,6 +11,7 @@ import com.app.cat.kevin.thecatapp.utils.RxFunctions;
 import java.util.List;
 
 import io.reactivex.Single;
+import okhttp3.ResponseBody;
 
 public class CatApiService {
 
@@ -44,5 +45,13 @@ public class CatApiService {
                 .likeCat(favouriteRequest)
                 .compose(RxFunctions.applySingleSchedulers())
                 .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api likeCat error " + throwable));
+    }
+
+    public  Single<ResponseBody> downloadCatImage(String url) {
+        return retrofitInitializer
+                .catApi()
+                .downloadCatImage(url)
+                .compose(RxFunctions.applySingleSchedulers())
+                .doOnError( throwable -> Log.e(RETROFIT_ERROR, "Api cat image error " + throwable));
     }
 }

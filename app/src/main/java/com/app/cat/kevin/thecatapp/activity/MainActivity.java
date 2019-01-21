@@ -3,6 +3,7 @@ package com.app.cat.kevin.thecatapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -15,18 +16,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.app.cat.kevin.thecatapp.view.ConnectionErrorView;
 import com.app.cat.kevin.thecatapp.R;
 import com.app.cat.kevin.thecatapp.adapter.CatListAdapter;
 import com.app.cat.kevin.thecatapp.api.service.CatApiService;
 import com.app.cat.kevin.thecatapp.model.Cat;
 import com.app.cat.kevin.thecatapp.model.FavouriteRequest;
 import com.app.cat.kevin.thecatapp.model.FavouriteResponse;
+import com.app.cat.kevin.thecatapp.view.ConnectionErrorView;
 import com.app.cat.kevin.thecatapp.view.FilterView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +37,7 @@ import static com.app.cat.kevin.thecatapp.activity.ListDetailActivity.USER_ID;
 
 
 public class MainActivity extends AppCompatActivity implements CatListAdapter.OnListClick,
-        CatListAdapter.OnLikeClick, ConnectionErrorView.OnTryAgainButtonListener, FilterView.OnFilterButtonListener
+        CatListAdapter.OnLikeClick, ConnectionErrorView.OnTryAgainButtonListener, FilterView.OnFilterButtonListener, FilterView.OnCancelClickListener
         {
 
     @BindView(R.id.cat_list)
@@ -59,18 +60,22 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     private CatListAdapter adapter;
     private int positionLiked;
     private Menu mainMenu;
+    private CatApiService catApiService = new CatApiService();
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        layoutManager = new LinearLayoutManager(
+                this, OrientationHelper.VERTICAL, false);
+
         fetchCatList();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void fetchCatList() {
-        CatApiService catApiService = new CatApiService();
         catCompositeDisposable.add(catApiService.getCatList(page).subscribe(
                 this::catListSuccessResponse,
                 this::catListErrorResponse));
@@ -94,8 +99,20 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
         int id = item.getItemId();
 
         if(id == R.id.action_filter) {
-            filterView.setVisibility(View.VISIBLE);
-            filterView.setOnFilterButtonListener(this);
+            if(filterView.getVisibility() == View.VISIBLE ) {
+                animDown(filterView);
+                filterView.setVisibility(View.GONE);
+                animUp(catRecyclerView);
+                initCatRecycler(catList);
+                loading = false;
+            } else {
+                animDown(catRecyclerView);
+                catRecyclerView.setVisibility(View.GONE);
+                animUp(filterView);
+                filterView.setVisibility(View.VISIBLE);
+                filterView.setOnFilterButtonListener(radioValue -> onFilterButtonClick(radioValue));
+                filterView.setOnCancelClickListener(this::onCancelClick);
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -103,30 +120,35 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
 
     public void catListSuccessResponse(List<Cat> catListResponse) {
         setFilterVisible();
-        loading = false;
-        setCatList(catListResponse);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
-                this, OrientationHelper.VERTICAL, false);
-
-        if(page > INITIAL_PAGE) {
-            adapter.notifyDataSetChanged();
-        } else {
-            initCatRecycler(layoutManager);
+        int catListSize = catListResponse.size();
+        for (int i = 0; i < catListSize; i++) {
+            catListResponse.get(i).setTag(randomColor());
         }
-        recyclerScrollListener(layoutManager);
+
+        recyclerAdapterLoader(catListResponse);
     }
 
     public void setCatList(List<Cat> catList) {
         this.catList.addAll(catList);
     }
 
-    private void initCatRecycler(LinearLayoutManager layoutManager) {
+    private void animUp(View view) {
         Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        view.startAnimation(slideUp);
+    }
+
+    private void animDown(View view) {
+        Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        view.startAnimation(slideDown);
+    }
+
+    private void initCatRecycler(List<Cat> cats) {
+
+        animUp(catRecyclerView);
         initRecyclerProgress();
-        catRecyclerView.startAnimation(slideUp);
         adapter = new CatListAdapter(
                 this,
-                catList,
+                cats,
                 this::onCatListClickListener,
                 this::onLikeClickListener);
         catRecyclerView.setLayoutManager(layoutManager);
@@ -134,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     }
 
     public void like(FavouriteRequest favouriteRequest) {
-        CatApiService catApiService = new CatApiService();
         catCompositeDisposable.add(catApiService.likeCat(favouriteRequest).subscribe(
                 this::favouriteResponseSuccess,
                 this::favouriteResponsError));
@@ -238,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     public void onLikeClickListener(String id, int position) {
         startSnack(getString(R.string.on_like_click_message));
         positionLiked = position;
+        Toast.makeText(this, catList.get(position).getColor(), Toast.LENGTH_SHORT).show();
         FavouriteRequest favouriteRequest = new FavouriteRequest(id, getResources().getString(R.string.api_cat_user_id));
         like(favouriteRequest);
     }
@@ -250,9 +272,60 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     }
 
     @Override
-    public void onFilterButtonClick(String radioValue) {
+    public void onFilterButtonClick(int radioValue) {
         filterView.setVisibility(View.GONE);
-        Toast.makeText(this, radioValue, Toast.LENGTH_SHORT).show();
+        if(radioValue != 0) {
+            loading = true;
+            List<Cat> newFilteredCatList = new ArrayList<>();
+            for (int i = 0; i < catList.size(); i++) {
+                Cat cat = catList.get(i);
+                if (cat.getTag() == radioValue) {
+                    newFilteredCatList.add(cat);
+                }
+            }
+
+            initCatRecycler(newFilteredCatList);
+        }
     }
+
+    private void recyclerAdapterLoader(List<Cat> catListResponse) {
+        loading = false;
+        setCatList(catListResponse);
+
+        if(page > INITIAL_PAGE) {
+            adapter.notifyDataSetChanged();
+        } else {
+            initCatRecycler(catList);
+        }
+        recyclerScrollListener(layoutManager);
+    }
+
+    private int random() {
+        Random r = new Random();
+        return  r.nextInt(5 - 1);
+    }
+
+    private int randomColor() {
+        switch (random()) {
+            case 1:
+                return ContextCompat.getColor(this, R.color.cat_tag_brown);
+            case 2:
+                return ContextCompat.getColor(this, R.color.cat_tag_gray);
+            case 3:
+                return ContextCompat.getColor(this, R.color.cat_tag_black);
+            default:
+                return ContextCompat.getColor(this, R.color.cat_tag_white);
+        }
+    }
+
+    @Override
+    public void onCancelClick() {
+        animDown(filterView);
+        filterView.setVisibility(View.GONE);
+        animUp(catRecyclerView);
+        initCatRecycler(catList);
+        loading = false;
+    }
+
 }
 

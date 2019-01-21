@@ -15,12 +15,6 @@
     android:layout_height="match_parent"
     android:visibility="gone"/>
 
-    <com.app.cat.kevin.thecatapp.view.FilterView
-        android:id="@+id/filter_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/cat_list"
@@ -28,6 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/cat_list_item" />
+
+    <com.app.cat.kevin.thecatapp.view.FilterView
+        android:id="@+id/filter_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <ProgressBar
         tools:visibility="visible"

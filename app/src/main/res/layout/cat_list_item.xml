@@ -11,12 +11,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/cat_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:background="@color/colorPrimary"
-            android:contentDescription="@string/cat_list_item_image_description" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/cat_image"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/cat_list_item_image_description" />
+
+            <View
+                android:id="@+id/cat_tag"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="8dp"
+                android:background="@color/cat_tag_gray" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:weightSum="10"
@@ -43,6 +56,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/ic_action_heart"
                 android:layout_marginRight="8dp" />
+
         </LinearLayout>
 
     </LinearLayout>

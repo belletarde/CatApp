@@ -1,8 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
     android:gravity="center"
+    android:padding="16dp"
     android:orientation="vertical">
 
 
@@ -10,26 +12,72 @@
         android:id="@+id/radio_filter_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="left"
+        android:orientation="vertical">
 
         <RadioButton
-            android:id="@+id/filter_view_radio_1"
+            android:id="@+id/filter_view_radio_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Black" />
+            tools:text="Black"
+            android:textColor="@color/colorAccent"
+            android:drawableLeft="@drawable/black_radio_filter"
+            android:layout_marginBottom="16dp"/>
 
         <RadioButton
-            android:id="@+id/filter_view_radio_2"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/filter_view_radio_brown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="White" />
+            tools:text="Brown"
+            android:drawableLeft="@drawable/brown_radio_filter"
+            android:layout_marginBottom="16dp"/>
+
+        <RadioButton
+            android:id="@+id/filter_view_radio_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="White"
+            android:textColor="@color/colorAccent"
+            android:drawableLeft="@drawable/white_radio_filter"
+            android:layout_marginBottom="16dp"/>
+
+        <RadioButton
+            android:textColor="@color/colorAccent"
+            android:id="@+id/filter_view_radio_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="Gray"
+            android:drawableLeft="@drawable/gray_radio_filter"
+            android:layout_marginBottom="16dp"/>
+
     </RadioGroup>
 
-    <Button
-        android:id="@+id/filter_view_btn"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Filter"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:id="@+id/filter_view_btn_cancel"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"/>
+
+        <Button
+            android:id="@+id/filter_view_btn_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Filter"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
 </LinearLayout>

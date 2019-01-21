@@ -5,4 +5,9 @@
     <color name="colorAccent">#ffff</color>
     <color name="ratingUnselectedColor">#e1bee7</color>
     <color name="light_primary_background">#e1bee7</color>
+
+    <color name="cat_tag_brown">#8b6645</color>
+    <color name="cat_tag_gray">#808080</color>
+    <color name="cat_tag_black">#000</color>
+    <color name="cat_tag_white">#fff</color>
 </resources>
