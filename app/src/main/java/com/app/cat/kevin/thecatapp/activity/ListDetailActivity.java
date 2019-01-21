@@ -150,8 +150,6 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     }
 
     private void catImageDownloadSuccess(ResponseBody body) throws IOException {
-//        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-
         String base64 = Base64.encodeToString(body.bytes(), Base64.DEFAULT);
         if (base64 != null) {
             makeRequestObject(base64);
@@ -165,12 +163,14 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     }
 
     private void colorRecognizeSuccess(ImageColorRecognizeResponse body) {
-        int[] colors = {getColor(body, 0), getColor(body, 1)};
-        GradientDrawable gd = new GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM, colors);
+        if (body != null && body.getResponses().size() > 0) {
+            int[] colors = {getColor(body, 0), getColor(body, 1)};
+            GradientDrawable gd = new GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM, colors);
 
-        gd.setCornerRadius(0f);
-        catColor.setBackground(gd);
+            gd.setCornerRadius(0f);
+            catColor.setBackground(gd);
+        }
 
         Animation slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_right);
         catDetailLayout.startAnimation(slideRight);
@@ -183,7 +183,7 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     }
 
     private void colorRecognizeError(Throwable throwable) {
-        Toast.makeText(this, "yyy", Toast.LENGTH_SHORT).show();
+        catColor.setVisibility(View.GONE);
     }
 
     private ImageColorRecognizeRequest makeRequestObject(String base64) {

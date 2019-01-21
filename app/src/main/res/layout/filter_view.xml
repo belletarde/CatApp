@@ -12,8 +12,9 @@
         android:id="@+id/radio_filter_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:layout_gravity="left"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/filter_view_radio_black"
