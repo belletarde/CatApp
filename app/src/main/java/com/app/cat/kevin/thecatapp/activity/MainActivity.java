@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.app.cat.kevin.thecatapp.R;
 import com.app.cat.kevin.thecatapp.adapter.CatListAdapter;
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
                 catRecyclerView.setVisibility(View.GONE);
                 animUp(filterView);
                 filterView.setVisibility(View.VISIBLE);
-                filterView.setOnFilterButtonListener(radioValue -> onFilterButtonClick(radioValue));
+                filterView.setOnFilterButtonListener(this::onFilterButtonClick);
                 filterView.setOnCancelClickListener(this::onCancelClick);
             }
         }
@@ -259,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
     public void onLikeClickListener(String id, int position) {
         startSnack(getString(R.string.on_like_click_message));
         positionLiked = position;
-        Toast.makeText(this, catList.get(position).getColor(), Toast.LENGTH_SHORT).show();
         FavouriteRequest favouriteRequest = new FavouriteRequest(id, getResources().getString(R.string.api_cat_user_id));
         like(favouriteRequest);
     }
@@ -273,7 +271,9 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
 
     @Override
     public void onFilterButtonClick(int radioValue) {
+        animDown(filterView);
         filterView.setVisibility(View.GONE);
+        animUp(catRecyclerView);
         if(radioValue != 0) {
             loading = true;
             List<Cat> newFilteredCatList = new ArrayList<>();
@@ -284,7 +284,14 @@ public class MainActivity extends AppCompatActivity implements CatListAdapter.On
                 }
             }
 
-            initCatRecycler(newFilteredCatList);
+            if(newFilteredCatList.size() > 0){
+                initCatRecycler(newFilteredCatList);
+                return;
+            } else {
+                startSnack("No cats found with selected tag");
+                loading = false;
+                initCatRecycler(catList);
+            }
         }
     }
 

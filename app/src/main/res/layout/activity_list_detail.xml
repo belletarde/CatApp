@@ -42,11 +42,14 @@
                 android:layout_height="256dp"
                 android:background="@color/colorPrimary"
                 android:contentDescription="@string/app_name" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/cat_color"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="8dp"
                 android:background="@color/colorPrimary"/>
 
@@ -57,6 +60,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="8dp"
                 tools:text="description"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_marginTop="16dp"

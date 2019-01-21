@@ -165,12 +165,7 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
     }
 
     private void colorRecognizeSuccess(ImageColorRecognizeResponse body) {
-        ColorRGB color = body.getResponses().get(0).getDominationColors().getColors().getColors().get(0).getColor();
-        ColorRGB color2 = body.getResponses().get(0).getDominationColors().getColors().getColors().get(1).getColor();
-        int x = Color.rgb(color.getRed(), color.getGreen(), color.getBlue());
-        int y = Color.rgb(color2.getRed(), color2.getGreen(), color2.getBlue());
-
-        int[] colors = {x, y};
+        int[] colors = {getColor(body, 0), getColor(body, 1)};
         GradientDrawable gd = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM, colors);
 
@@ -182,12 +177,14 @@ public class ListDetailActivity extends AppCompatActivity implements ConnectionE
         successProgress();
 
     }
+    private int getColor(ImageColorRecognizeResponse body, int index) {
+        ColorRGB color = body.getResponses().get(0).getDominationColors().getColors().getColors().get(index).getColor();
+        return Color.rgb(color.getRed(), color.getGreen(), color.getBlue());
+    }
 
     private void colorRecognizeError(Throwable throwable) {
         Toast.makeText(this, "yyy", Toast.LENGTH_SHORT).show();
     }
-
-
 
     private ImageColorRecognizeRequest makeRequestObject(String base64) {
         RequestImage requestImage = new RequestImage(base64);

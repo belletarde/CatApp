@@ -68,14 +68,14 @@
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"/>
+            android:text="@string/reset_filter_btn"/>
 
         <Button
             android:id="@+id/filter_view_btn_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAccent"
-            android:text="Filter"
+            android:text="@string/confirm_filter_btn"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>

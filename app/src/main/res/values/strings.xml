@@ -20,4 +20,6 @@
     <string name="success_favourite">Wow! This cat love you too.</string>
     <string name="error_already_favourite">Oh! This cat already love you.</string>
     <string name="error_on_favorite">"Oh no, an error occurred."</string>
+    <string name="confirm_filter_btn">Confirm</string>
+    <string name="reset_filter_btn">Reset</string>
 </resources>

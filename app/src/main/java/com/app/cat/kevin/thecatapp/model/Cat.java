@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Cat {
-    private String id, url, color;
+    private String id, url;
     @SerializedName("breeds")
     private List<Breed> breed;
     long tag;
@@ -44,14 +44,6 @@ public class Cat {
 
     public void setBreed(List<Breed> breed) {
         this.breed = breed;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getColor() {
-        return color;
     }
 
     public void setTag(long tag) {
